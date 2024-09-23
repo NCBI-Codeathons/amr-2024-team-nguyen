@@ -1,12 +1,12 @@
 # Team Project Name
 
 List of participants and affiliations:
-- Marcus Nguyen, Argonne National Lab (Team Leader)
-- Nicole Bowers, Argonne National Lab 
-- Clark Cucinell, Argonne National Lab
+- (Team Leader) Marcus Nguyen, Argonne National Lab [ANL](https://www.anl.gov/)
+- Nicole Bowers, Argonne National Lab [ANL](https://www.anl.gov/)
+- Clark Cucinell, Argonne National Lab [ANL](https://www.anl.gov/)
 - Curtis Hendrickson, [UAB](https://uab.edu) (University of Alabama at Birmingham), [ICTV](https://ictv.global), [BV-BRC](https://bv-brc.org)
 - Don Dempsey, [UAB](https://uab.edu) (University of Alabama at Birmingham), [ICTV](https://ictv.global), [BV-BRC](https://bv-brc.org), [Kaizen-Education](https://www.uab.edu/ccts/training-academy/kaizen)
-- Andrew Warren, University of Virginia
+- Andrew Warren, University of Virginia Biocomplexity Institute and Initiative [BII](https://biocomplexity.virginia.edu/)
 
 
 ## Project Goals
