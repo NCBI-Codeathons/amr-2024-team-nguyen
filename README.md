@@ -17,7 +17,7 @@ The primary goal of this project is to establish robust correlations between the
 
 ## Approach
 
-![Testing this](unnamed0.jpg)
+![unnamed0](https://github.com/user-attachments/assets/a5da2130-1dba-43d6-bce2-2de54c97899c)
 
 ## Results
 
@@ -28,5 +28,4 @@ This software was created as part of an NCBI codeathon, a hackathon-style event 
 
 For general questions about NCBI software and tools, please visit: [NCBI Contact Page](https://www.ncbi.nlm.nih.gov/home/about/contact/)
 
-![unnamed0](https://github.com/user-attachments/assets/a5da2130-1dba-43d6-bce2-2de54c97899c)
-![unnamed0](https://github.com/user-attachments/assets/24a0b610-ee10-45dd-95fa-27c2e303522d)
+
