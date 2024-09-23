@@ -4,7 +4,7 @@ List of participants and affiliations:
 - (Team Leader) Marcus Nguyen, [ANL](https://www.anl.gov/) (Argonne National Lab)
 - (Writer) Nicole Bowers, [ANL](https://www.anl.gov/) (Argonne National Lab)
 - (Tech Lead) Clark Cucinell, [ANL](https://www.anl.gov/) (Argonne National Lab)
-- (![flex](https://github.com/user-attachments/assets/e498c0a6-5641-487d-b346-624ff7a6d922 = 250x250)) Curtis Hendrickson, [UAB](https://uab.edu) (University of Alabama at Birmingham)
+- (![flex](https://github.com/user-attachments/assets/e498c0a6-5641-487d-b346-624ff7a6d922 width=50% height=50%)) Curtis Hendrickson, [UAB](https://uab.edu) (University of Alabama at Birmingham)
 - (![flex](https://github.com/user-attachments/assets/e498c0a6-5641-487d-b346-624ff7a6d922 = 250x250)) Don Dempsey, [UAB](https://uab.edu) (University of Alabama at Birmingham)
 - (![flex](https://github.com/user-attachments/assets/e498c0a6-5641-487d-b346-624ff7a6d922 = 250x250)) Andrew Warren, [BII](https://biocomplexity.virginia.edu/) (University of Virginia Biocomplexity Institute and Initiative)
 
