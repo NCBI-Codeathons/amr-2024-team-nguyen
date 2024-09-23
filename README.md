@@ -11,6 +11,8 @@ List of participants and affiliations:
 
 ## Project Goals
 
+The primary goal of this project is to establish robust correlations between the results of Antimicrobial Susceptibility Testing (AST) and the presence of Antimicrobial Resistance (AMR) genes, both plasmid-borne and chromosomal. By systematically analyzing bacterial isolates, we aim to identify specific patterns in resistance profiles that correspond to the presence of particular AMR genes and their location on plasmids or the chromosome. This will provide valuable insights into the mechanisms by which resistance is conferred and transmitted within microbial populations, potentially informing future therapeutic strategies and public health interventions aimed at combating the spread of antimicrobial resistance.
+
 ## Approach
 
 ## Results
