@@ -23,7 +23,11 @@ This project will employ a 3-pronged approach to systematically identify AMR gen
 
 ## Results
 
+TODO
+
 ## Future Work
+
+TODO
 
 ## NCBI Codeathon Disclaimer
 This software was created as part of an NCBI codeathon, a hackathon-style event focused on rapid innovation. While we encourage you to explore and adapt this code, please be aware that NCBI does not provide ongoing support for it.
