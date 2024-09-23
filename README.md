@@ -2,6 +2,7 @@
 
 List of participants and affiliations:
 - Participant, Affiliation (Team Leader)
+- Curtis Hendrickson, [UAB](https://uab.edu) (University of Alabama at Birmingham), [ICTV](https://ictv.global), [BV-BRC](https://bv-brc.org
 - Participant, Affiliation
 
 ## Project Goals
