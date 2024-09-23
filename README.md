@@ -1,10 +1,13 @@
 # Team Project Name
 
 List of participants and affiliations:
-- Participant, Affiliation (Team Leader)
+- Marcus Nguyen, Argonne National Lab (Team Leader)
+- Nicole Bowers, Argonne National Lab 
+- Clark Cucinell, Argonne National Lab
 - Curtis Hendrickson, [UAB](https://uab.edu) (University of Alabama at Birmingham), [ICTV](https://ictv.global), [BV-BRC](https://bv-brc.org)
 - Don Dempsey, [UAB](https://uab.edu) (University of Alabama at Birmingham), [ICTV](https://ictv.global), [BV-BRC](https://bv-brc.org), [Kaizen-Education](https://www.uab.edu/ccts/training-academy/kaizen)
-- Participant, Affiliation
+- Andrew Warren, University of Virginia
+
 
 ## Project Goals
 
