@@ -35,6 +35,13 @@ samplesRawDf = parse_ast_catalog(DATASET_DIR+"/"+CAT_FILENAME)
 # FNA version with just filenames
 samplesRawDf["FNAF"] = samplesRawDf["FNA"].apply(os.path.basename)
 
+# denovo and  version with just filenames
+samplesRawDf["FNAF"] = samplesRawDf["FNA"].apply(os.path.basename)
+
+# derived files
+samplesRawDf["FNAdenovo"] = samplesRawDf['FNAdenovo'] = samplesRawDf['FNA'].str.replace(r'\.fna$', '.denovo.fna', regex=True)
+samplesRawDf["FNAguided"] = samplesRawDf['FNAguided'] = samplesRawDf['FNA'].str.replace(r'\.fna$', '.guided.fna', regex=True)
+
 # load our blacklist of accessions to ignore
 blacklist = pd.read_csv("accessions_blacklist.tsv", sep='\t')
 
@@ -85,7 +92,7 @@ rule wc:
 rule wc_proc_lamdba:
 	wildcard_constraints: ACC="GCA_[0-9]+\\.[0-9]+"
 	output: OUT_DIR+"/{ACC}.txt"
-	input: lambda wildcards: DATASET_DIR+"/"+samplesDf.loc[samplesDf['accession'] == wildcards.ACC, 'FNA'].values[0]
+	input: lambda wildcards: os.path.join(DATASET_DIR,samplesDf.loc[samplesDf['accession'] == wildcards.ACC, 'FNA'].values[0])
 	shell: "grep -H -c '>' {input} > {output}"
 
 rule wc_proc_no_lambda:
@@ -97,8 +104,99 @@ rule wc_proc_no_lambda:
 
 # ----------------------------------------------------------------------
 # 
-# "wc" - test process
+# "XIOAHUI" plasmid finder
 #
-# process top 100 non-blacklisted samples
+# process top 1 non-blacklisted samples
 #
+# extracted from ../plasmid_chromosome_phage/pred_all_cln/runModels.sh
 # ----------------------------------------------------------------------
+
+PLASMID_X_DIR="../plasmid_chromosome_phage/pred_all_cln"
+
+#
+# top level target
+# 
+# for now, just first sample
+
+rule plasmids_x:
+	input: expand(OUT_DIR + "/{accession}.plasmid.txt", accession=samplesDf['accession'])
+
+# ......................................................................
+#
+# split contig into 5k chunks
+# 
+# subsampleFastas.py DIR/
+#    files must end in .fasta
+#    all .fasta in directory will be processed
+#    output will be .sub.fasta files in the same directory
+#
+# ......................................................................
+
+#
+# create source dir of fastas to processs: split program requires a dir of *.fasta
+#
+# sub
+rule plasmid_x_setup_denovo_src_dir:
+	output: OUT_DIR+"/{ACC}/{ACC}.denovo.fna"
+	input: lambda wildcards: os.path.join(DATASET_DIR,samplesDf.loc[samplesDf['accession'] == wildcards.ACC, 'FNAdenovo'].values[0])
+	shell: "ln -s {input} {output}"
+
+rule plasmid_x_setup_guided_src_dir:
+	output: OUT_DIR+"/{ACC}/{ACC}.guided.fna"
+	input: lambda wildcards: os.path.join(DATASET_DIR,samplesDf.loc[samplesDf['accession'] == wildcards.ACC, 'FNAguided'].values[0])
+	shell: "ln -s {input} {output}"
+
+#
+# Split multi-contig fasta files into contig-specific fastas
+#
+rule plasmid_x_split_denovo_contig:
+	output: OUT_DIR+"/{ACC}/{ACC}.denovo.fna.split/list.txt"
+	input:  OUT_DIR+"/{ACC}/{ACC}.denovo.fna"
+	shell:
+		"python {PLASMID_X_DIR}/splitFasta.py {input}"
+		" && "
+		"find $(dirname {output}) -name '*.fasta' -exec grep '>' {{}} + > {output}"
+
+rule plasmid_x_split_guided_contig:
+	output: OUT_DIR+"/{ACC}/{ACC}.guided.fna.split/list.txt"
+	input:  OUT_DIR+"/{ACC}/{ACC}.guided.fna"
+	shell:
+		"python {PLASMID_X_DIR}/splitFasta.py {input}"
+		" && "
+		"find $(dirname {output}) -name '*.fasta' -exec grep '>' {{}} + > {output}"
+
+# 
+#
+# choose random 5k nt chunk from each contig > 5k
+# 
+# subsampleFastas.py FASTA_DIR
+#
+rule plasmid_x_sample_denovo_contig:
+	output: OUT_DIR+"/{ACC}/{ACC}.denovo.fna.split/list.sub.txt"
+	input: OUT_DIR+"/{ACC}/{ACC}.denovo.fna.split/list.txt"
+	shell:
+		#"source {PLASMID_X_DIR}/zou/conda3/nogpu/bin/activate root "
+		#" && "
+		"python {PLASMID_X_DIR}/zou/subsampleFastas.py $(dirname {output})/"
+		" && "
+		"find $(dirname {output}) -name '*.fasta' -exec grep '>' {{}} + > {output}"
+
+
+rule plasmid_x_sample_guided_contig:
+	output: OUT_DIR+"/{ACC}/{ACC}.guided.fna.split/list.sub.txt"
+	input: OUT_DIR+"/{ACC}/{ACC}.guided.fna.split/list.txt"
+	shell:
+		#"source {PLASMID_X_DIR}/zou/conda3/nogpu/bin/activate root "
+		#" && "
+		"python {PLASMID_X_DIR}/zou/subsampleFastas.py $(dirname {output})/"
+		" && "
+		"find $(dirname {output}) -name '*.fasta' -exec grep '>' {{}} + > {output}"
+
+rule plasmid_x_analyse_placeholder:
+	input: 
+		denovo=OUT_DIR+"/{ACC}/{ACC}.denovo.fna.split/list.sub.txt",
+		guided=OUT_DIR+"/{ACC}/{ACC}.guided.fna.split/list.sub.txt",
+	output:OUT_DIR+"/{ACC}.plasmid.txt" 
+	shell:
+		"cat {input} > {output}"
+
