@@ -1,0 +1,112 @@
+#!/usr/bin/env snakemake
+#
+# Analyze all-ast contigs for plasmids
+#
+import pandas as pd
+import os
+
+######################################################################
+#
+# set up enviroment and sample list
+#
+######################################################################
+
+#
+# ---------------- INPUTs ----------------
+#
+DATASET_DIR="/home/nbowers/bvbrc-dev/dev_container/NCBI_AMR_Codeathon/all-ast"
+CAT_FILENAME="dataset_catalog.json"
+TEST_CAT_FILENAME="/home/ac.curtish/NCBI_AMR_Codeathon/my-ast/dataset_catalog.head.json"
+#
+# ---------------- OUTPUTS ----------------
+#
+#OUT_DIR="/home/ac.curtish/NCBI_AMR_Codeathon/all-plasmid/out"
+OUT_DIR="out"
+ 
+#
+# ----------------- SAMPLE LIST -----------
+#
+include: "rules/parse_dataset_catalog.py"
+
+# load sample accessions/filenames from the catalog.json
+samplesRawDf = parse_ast_catalog(DATASET_DIR+"/"+CAT_FILENAME)
+#samplesRawDf = parse_ast_catalog(TEST_CAT_FILENAME)
+
+# FNA version with just filenames
+samplesRawDf["FNAF"] = samplesRawDf["FNA"].apply(os.path.basename)
+
+# load our blacklist of accessions to ignore
+blacklist = pd.read_csv("accessions_blacklist.tsv", sep='\t')
+
+# Filter out rows in samplesRaw where the 'accession' is in the blacklist
+samplesDf = samplesRawDf[~samplesRawDf['accession'].isin(blacklist['accession'])]
+print("Filtered Samples (blacklist): {0} rows, {1} columns.".format(*samplesDf.shape))
+
+samplesTup   = list(zip(*[samplesDf[col] for col in samplesDf.columns]))
+
+######################################################################
+#
+# RULES
+#
+######################################################################
+
+rule help: 
+	run:
+		print("--- help ----")
+		print("help: list top targets")
+		print("test: show top 10 samples")
+		print("wc: test running wc on top 100 fnas")
+		print("plasmids_x: Xioahui's models")
+		print("")
+
+rule test: 
+	run: 
+		print(samplesDf.head(n=10))
+
+
+# ----------------------------------------------------------------------
+# 
+# "wc" - test process
+#
+# process top 100 non-blacklisted samples
+#
+# ----------------------------------------------------------------------
+
+#
+# top level rule - samples to run
+#
+rule wc: 
+	input: expand(OUT_DIR + "/{accession}.txt", accession=samplesDf['accession'].head(n=10))
+
+#
+# wc test process
+# 
+# get wc for assembly fna
+#
+rule wc_proc_lamdba:
+	wildcard_constraints: ACC="GCA_[0-9]+\\.[0-9]+"
+	output: OUT_DIR+"/{ACC}.txt"
+	input: lambda wildcards: DATASET_DIR+"/"+samplesDf.loc[samplesDf['accession'] == wildcards.ACC, 'FNA'].values[0]
+	shell: "grep -H -c '>' {input} > {output}"
+
+rule wc_proc_no_lambda:
+	wildcard_constraints: ACC="GCA_[0-9]+\\.[0-9]+"
+	output: OUT_DIR+"/{ACC}_{EXTRA}.txt"
+	input: DATASET_DIR+"/{ACC}/{ACC}_{EXTRA}"
+	#input: lambda wildcards: samplesDf.loc[samplesDf['accession'] == wildcards.accession, 'FNA'].values[0]
+	shell: "grep -H -c '>' {input} > {output}"
+
+# ----------------------------------------------------------------------
+# 
+# "XIOAHUI" plasmid finder
+#
+# process top 1 non-blacklisted samples
+#
+# ----------------------------------------------------------------------
+rule plasmids_x:
+	wildcard_constraints: ACC="GCA_[0-9]+\\.[0-9]+"
+	output: OUT_DIR+"/{ACC}.txt"
+	input: lambda wildcards: DATASET_DIR+"/"+samplesDf.loc[samplesDf['accession'] == wildcards.ACC, 'FNA'].values[0]
+	shell: "grep -H -c '>' {input} > {output}"
+
+
