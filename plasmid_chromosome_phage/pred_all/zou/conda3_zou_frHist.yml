@@ -1,0 +1,28 @@
+name: base
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.7
+  - setuptools
+  - pip
+  - wheel
+  - anaconda-client
+  - anaconda-project
+  - anaconda-navigator
+  - conda
+  - conda-build
+  - conda-content-trust
+  - conda-pack
+  - conda-package-handling
+  - conda-package-streaming
+  - conda-token
+  - conda-verify
+  - mamba
+  - libarchive==3.5.2
+  - ca-certificates
+  - certifi
+  - openssl
+  - tensorflow-gpu=2.0.0
+  - scikit-learn=0.21.3
+prefix: /vol/ml/mnguyen/plasmid_chromosome_phage/zou/conda3

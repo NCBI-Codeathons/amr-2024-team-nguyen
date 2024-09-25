@@ -1,0 +1,11 @@
+name: root
+channels:
+  - conda-forge
+  - defaults
+  - anaconda
+dependencies:
+  - python=3.7
+  - tensorflow-gpu=2.0.0
+  - scikit-learn=0.21.3
+  - pandas
+prefix: /vol/ml/mnguyen/plasmid_chromosome_phage/zou/conda3
