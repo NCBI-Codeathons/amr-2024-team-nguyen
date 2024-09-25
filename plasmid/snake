@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+# run snakemake with our fav arguments
+#
+
+#
+# make Zou plasmid analyses
+#
+snakemake -k --rerun-incomplete --cores $((nprocs - 4)) plasmids_x $*
+
+# 
+# summarize results
+# 
+echo "#" find /scratch/NCBI_AMR_Codeathon/plasmid/out -name *.zou.pred.tab | cut -d . -f 4 | sort | uniq -c
+
+echo "# DONE: $(date) $0"
+
