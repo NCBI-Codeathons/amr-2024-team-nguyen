@@ -50,7 +50,7 @@ samplesDf = samplesRawDf[~samplesRawDf['accession'].isin(blacklist['accession'])
 print("Filtered Samples (blacklist): {0} rows, {1} columns.".format(*samplesDf.shape))
 
 # head, for faster debugging
-headN=10
+headN=23000000
 samplesDf = samplesDf.head(n=headN)
 print("Head Samples: {0} rows, {1} columns.".format(*samplesDf.shape))
 
@@ -114,10 +114,10 @@ rule wc_proc_no_lambda:
 #
 # process top 1 non-blacklisted samples
 #
-# extracted from ../plasmid_chromosome_phage/pred_all_cln/runModels.sh
+# extracted from ../plasmid_chromosome_phage/pred_all/runModels.sh
 # ----------------------------------------------------------------------
 
-PLASMID_X_DIR="../plasmid_chromosome_phage/pred_all_cln"
+PLASMID_X_DIR="../plasmid_chromosome_phage/pred_all"
 
 #
 # top level target
