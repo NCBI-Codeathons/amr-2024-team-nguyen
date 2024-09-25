@@ -50,7 +50,7 @@ samplesDf = samplesRawDf[~samplesRawDf['accession'].isin(blacklist['accession'])
 print("Filtered Samples (blacklist): {0} rows, {1} columns.".format(*samplesDf.shape))
 
 # head, for faster debugging
-headN=23000000
+headN=10000000
 samplesDf = samplesDf.head(n=headN)
 print("Head Samples: {0} rows, {1} columns.".format(*samplesDf.shape))
 
@@ -190,3 +190,50 @@ rule plasmid_x_analyze_sample_kmc:
         "{input.script} $PWD/{PLASMID_X_DIR} $PWD/{input.guided_fa} $PWD/$(dirname {input.guided_fa})"
         
         
+# ----------------------------------------------------------------------
+# 
+# "Plasmid Finder"
+#
+# https://github.com/genomicepidemiology/plasmidfinder
+#
+# ----------------------------------------------------------------------
+
+rule plasmids_pf:
+    input: expand(OUT_DIR + "/{accession}/{accession}.denovo.fna.pf/data.json", accession=samplesDf['accession'])
+
+rule plasmid_pf_analyze:
+    input:
+        denovo_fa=OUT_DIR+"/{ACC}/{ACC}.denovo.fna",
+        guided_fa=OUT_DIR+"/{ACC}/{ACC}.guided.fna",
+    output:
+        denovo=OUT_DIR+"/{ACC}/{ACC}.denovo.fna.pf/data.json",
+        guided=OUT_DIR+"/{ACC}/{ACC}.guided.fna.pf/data.json"
+    shell:
+        # activate env
+        "("
+        "source ~/miniconda3/etc/profile.d/conda.sh "
+        " && "
+        "conda activate ../plasmid_finder/conda_pf "
+        " && "
+        # denovo
+        #"./scripts/plasmid_pf.sh ../plasmid_finder {input.denovo_fa} $(dirname {output.denovo}) "
+        #"plasmidfinder.py -i {input.denovo_fa} -o $(dirname {output.denovo}) "
+        "if [ -s {input.denovo_fa} ]; then plasmidfinder.py -i {input.denovo_fa} -o $(dirname {output.denovo}); else touch {output.denovo}; fi "
+        " && "
+        # guided
+        #"./scripts/plasmid_pf.sh ../plasmid_finder {input.guided_fa} $(dirname {output.guided}) "
+        #"plasmidfinder.py -i {input.guided_fa} -o $(dirname {output.guided}) "
+        "if [ -s {input.guided_fa} ]; then plasmidfinder.py -i {input.guided_fa} -o $(dirname {output.guided}); else  touch {output.guided}; fi "
+        ")"
+
+# ----------------------------------------------------------------------
+# 
+# All plasmid finders
+#
+# ----------------------------------------------------------------------
+
+rule plasmids:
+    input:
+        xioahui_finder=rules.plasmids_x.input,
+        plasmidfinder=rules.plasmids_pf.input
+     

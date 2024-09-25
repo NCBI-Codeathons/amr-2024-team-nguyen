@@ -1,0 +1,11 @@
+name: plasmidFinder
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+  - anaconda
+dependencies:
+  - python=3.5
+  - bioconda::snakemake
+  - bioconda::plasmidfinder
+  - conda-forge::tabulate=0.7.7
