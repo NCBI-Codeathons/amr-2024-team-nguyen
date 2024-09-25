@@ -219,25 +219,15 @@ rule plasmid_x_summarize_sample:
 #
 rule plasmid_x_summarize_all_samples_fast:        
     input:
-        script="scripts/merge_clean_zou_pred.awk",
+        script="scripts/merge_clean_zou_pred.via_find_awk.sh",
+        subscript="scripts/merge_clean_zou_pred.awk",
         files=expand(OUT_DIR + "/{accession}/{accession}.denovo.fna.zou.pred.tab", accession=samplesDf['accession'])
     output:
-        denovo="merged.cleaned.denovo.zou.pred.tsv"
+        denovo="merged.cleaned.denovo.zou.pred.tsv",
         guided="merged.cleaned.guided.zou.pred.tsv"
     shell:
-        "echo '# denovo' && "
-        "time "
-        "find out -name '*.denovo.fna.zou.pred.tab' "
-        " -exec awk -v ASM_TYPE=denovo -f {input.script} {} + "
-        "| awk 'BEGIN{FS = OFS = "\t"}(NR>1&&$1!="genome_acc"){print $0}' "
-        "> {outout.denovo}"
-        " && "
-        "echo '# guided' && "
-        "time "
-        "find out -name '*.guided.fna.zou.pred.tab' "
-        " -exec awk -v ASM_TYPE=guided -f {input.script} {} + "
-        "| awk 'BEGIN{FS = OFS = "\t"}(NR>1&&$1!="genome_acc"){print $0}' "
-        "> {outout.guided}"
+        "{input.script}"
+
 # ----------------------------------------------------------------------
 # 
 # "Plasmid Finder"
