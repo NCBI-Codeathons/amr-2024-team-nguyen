@@ -49,6 +49,12 @@ blacklist = pd.read_csv("accessions_blacklist.tsv", sep='\t')
 samplesDf = samplesRawDf[~samplesRawDf['accession'].isin(blacklist['accession'])]
 print("Filtered Samples (blacklist): {0} rows, {1} columns.".format(*samplesDf.shape))
 
+# head, for faster debugging
+headN=10
+samplesDf = samplesDf.head(n=headN)
+print("Head Samples: {0} rows, {1} columns.".format(*samplesDf.shape))
+
+# convert to list of zip for use with input: expand("{sample.FNA}",sample=samplesTup.tupples())
 samplesTup   = list(zip(*[samplesDf[col] for col in samplesDf.columns]))
 
 ######################################################################
@@ -119,7 +125,7 @@ PLASMID_X_DIR="../plasmid_chromosome_phage/pred_all_cln"
 # for now, just first sample
 
 rule plasmids_x:
-	input: expand(OUT_DIR + "/{accession}.plasmid.txt", accession=samplesDf['accession'])
+	input: expand(OUT_DIR + "/{accession}/{accession}.denovo.fna.zou.pred.tab", accession=samplesDf['accession'])
 
 # ......................................................................
 #
@@ -165,38 +171,22 @@ rule plasmid_x_split_guided_contig:
 		" && "
 		"find $(dirname {output}) -name '*.fasta' -exec grep '>' {{}} + > {output}"
 
-# 
-#
-# choose random 5k nt chunk from each contig > 5k
-# 
-# subsampleFastas.py FASTA_DIR
-#
-rule plasmid_x_sample_denovo_contig:
-	output: OUT_DIR+"/{ACC}/{ACC}.denovo.fna.split/list.sub.txt"
-	input: OUT_DIR+"/{ACC}/{ACC}.denovo.fna.split/list.txt"
-	shell:
-		#"source {PLASMID_X_DIR}/zou/conda3/nogpu/bin/activate root "
-		#" && "
-		"python {PLASMID_X_DIR}/zou/subsampleFastas.py $(dirname {output})/"
-		" && "
-		"find $(dirname {output}) -name '*.fasta' -exec grep '>' {{}} + > {output}"
 
-
-rule plasmid_x_sample_guided_contig:
-	output: OUT_DIR+"/{ACC}/{ACC}.guided.fna.split/list.sub.txt"
-	input: OUT_DIR+"/{ACC}/{ACC}.guided.fna.split/list.txt"
-	shell:
-		#"source {PLASMID_X_DIR}/zou/conda3/nogpu/bin/activate root "
-		#" && "
-		"python {PLASMID_X_DIR}/zou/subsampleFastas.py $(dirname {output})/"
-		" && "
-		"find $(dirname {output}) -name '*.fasta' -exec grep '>' {{}} + > {output}"
-
-rule plasmid_x_analyse_placeholder:
-	input: 
-		denovo=OUT_DIR+"/{ACC}/{ACC}.denovo.fna.split/list.sub.txt",
-		guided=OUT_DIR+"/{ACC}/{ACC}.guided.fna.split/list.sub.txt",
-	output:OUT_DIR+"/{ACC}.plasmid.txt" 
-	shell:
-		"cat {input} > {output}"
-
+rule plasmid_x_analyze_sample_kmc:
+    input:
+        denovo_fa=OUT_DIR+"/{ACC}/{ACC}.denovo.fna",
+        denovo_split=OUT_DIR+"/{ACC}/{ACC}.denovo.fna.split/list.txt",
+        guided_fa=OUT_DIR+"/{ACC}/{ACC}.guided.fna",
+        guided_split=OUT_DIR+"/{ACC}/{ACC}.guided.fna.split/list.txt",
+        script="scripts/plasmid_x.sh"
+    output:
+        denovo=OUT_DIR+"/{ACC}/{ACC}.denovo.fna.zou.pred.tab",
+        guided=OUT_DIR+"/{ACC}/{ACC}.guided.fna.zou.pred.tab"
+    shell:
+        # denovo
+        "{input.script} $PWD/{PLASMID_X_DIR} $PWD/{input.denovo_fa} $PWD/$(dirname {input.denovo_fa})"
+        " && "
+        # guided
+        "{input.script} $PWD/{PLASMID_X_DIR} $PWD/{input.guided_fa} $PWD/$(dirname {input.guided_fa})"
+        
+        
