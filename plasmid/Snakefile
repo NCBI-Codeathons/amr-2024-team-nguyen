@@ -199,15 +199,15 @@ rule plasmid_x_analyze_sample_kmc:
 # ----------------------------------------------------------------------
 
 rule plasmids_pf:
-    input: expand(OUT_DIR + "/{accession}/{accession}.denovo.fna.pf/data.json", accession=samplesDf['accession'])
+    input: expand(OUT_DIR + "/{accession}/{accession}.{asm}.fna.pf/results_tab.tsv", accession=samplesDf['accession'], asm=['denovo','guided'])
 
 rule plasmid_pf_analyze:
     input:
         denovo_fa=OUT_DIR+"/{ACC}/{ACC}.denovo.fna",
         guided_fa=OUT_DIR+"/{ACC}/{ACC}.guided.fna",
     output:
-        denovo=OUT_DIR+"/{ACC}/{ACC}.denovo.fna.pf/data.json",
-        guided=OUT_DIR+"/{ACC}/{ACC}.guided.fna.pf/data.json"
+        denovo=OUT_DIR+"/{ACC}/{ACC}.denovo.fna.pf/results_tab.tsv",
+        guided=OUT_DIR+"/{ACC}/{ACC}.guided.fna.pf/results_tab.tsv"
     shell:
         # activate env
         "("
@@ -218,12 +218,12 @@ rule plasmid_pf_analyze:
         # denovo
         #"./scripts/plasmid_pf.sh ../plasmid_finder {input.denovo_fa} $(dirname {output.denovo}) "
         #"plasmidfinder.py -i {input.denovo_fa} -o $(dirname {output.denovo}) "
-        "if [ -s {input.denovo_fa} ]; then plasmidfinder.py -i {input.denovo_fa} -o $(dirname {output.denovo}); else touch {output.denovo}; fi "
+        "if [ -s {input.denovo_fa} ]; then plasmidfinder.py -x -i {input.denovo_fa} -o $(dirname {output.denovo}); else touch {output.denovo}; fi "
         " && "
         # guided
         #"./scripts/plasmid_pf.sh ../plasmid_finder {input.guided_fa} $(dirname {output.guided}) "
         #"plasmidfinder.py -i {input.guided_fa} -o $(dirname {output.guided}) "
-        "if [ -s {input.guided_fa} ]; then plasmidfinder.py -i {input.guided_fa} -o $(dirname {output.guided}); else  touch {output.guided}; fi "
+        "if [ -s {input.guided_fa} ]; then plasmidfinder.py -x -i {input.guided_fa} -o $(dirname {output.guided}); else  touch {output.guided}; fi "
         ")"
 
 # ----------------------------------------------------------------------
