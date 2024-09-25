@@ -8,7 +8,7 @@ echo <<EOF
 # create env
 #
 EOF
-conda create --prefix conda_pf -f plasmid_finder.yml
+conda env create --prefix conda_pf -f plasmid_finder.yml
 
 echo <<EOF 
 #

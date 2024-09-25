@@ -1,3 +1,7 @@
 __pychache__
 .snakemake
 out
+# large results files
+merge_clean_zou_pred.denovo.via_find_awk.tsv
+merge_clean_zou_pred.guided.via_find_awk.tsv
+out.bak
