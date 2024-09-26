@@ -49,11 +49,11 @@ def processJSON(inputFilename, outputFilename):
 
          # filename(s)
          if "filename(s)" not in userInput:
-            raise KeyError("Invalid filename(s) key")
+            raise KeyError("No filenames are available")
          
          filenames = userInput["filename(s)"]
          if filenames is None or not filenames or len(filenames) < 1:
-            raise Exception("Invalid filename(s) object")
+            raise Exception("No filenames were found")
 
          # plasmidfinder.user_input.filename(s)[0]
          fileAndPath = filenames[0]
@@ -93,6 +93,10 @@ def processJSON(inputFilename, outputFilename):
                   if database is None or not database or len(database) < 1:
                      continue
                   
+                  if isinstance(database, str):
+                     print(f"No hits found for {dbKey}")
+                     continue
+
                   for contigKey in database:
 
                      data = database[contigKey]
