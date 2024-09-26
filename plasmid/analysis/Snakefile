@@ -1,0 +1,81 @@
+#!/usr/bin/env snakemake
+#
+# Merge contig:plasmid calling with AMR element:contig database
+#
+#
+import pandas as pd
+
+# contig plasmid calling
+PLASMID_CALL_TSV="merge_clean_zou_pred.denovo.via_find_awk.tsv"
+
+# AMR elements in contigs
+BIG_CSV="/home/marcus.nguyen/codeathons/2024_ncbi_amr/ncbi_pathogen_detect_amr.csv"
+ELEMENT_CONTIG_TSV="convertedNPDA.tsv"
+ELEMENT_HIST_BASE="convertedNPDA.hist"
+ELEMENT_HIST_TYPES=["genome_acc","contig_acc","element_symbol","element_symbol_name"]
+ELEMENT_MIN_PERC=["5"]
+
+rule all:
+     input:
+        hists=expand(ELEMENT_HIST_BASE+".{title}.tsv", title=ELEMENT_HIST_TYPES),
+        uniq_genome_per_elem="convertedNPDA.hist.element_symbol_uniq_genome_counts.tsv",
+        subset=expand("convertedNPDA.{perc}perc.tsv", perc=["5","10"])
+
+# ----------------------------------------------------------------------
+#
+# extract the elements we need form AMR map
+#
+# Element Hierarchy, see
+#      https://www.ncbi.nlm.nih.gov/pathogens/genehierarchy
+#
+# May be able to collapse leaf nodes by stripping off "-[0-9]+" suffixes
+#
+# ----------------------------------------------------------------------
+rule extract_amr_elements:
+    input: BIG_CSV
+    output: ELEMENT_CONTIG_TSV
+    shell: "./convertNcbiPathogenDetectAmr.py --in {input} --out {output}"
+
+#
+# explore the dataset
+#
+rule histogram_elements:
+    input: ELEMENT_CONTIG_TSV
+    output: expand(ELEMENT_HIST_BASE+".{title}.tsv", title=ELEMENT_HIST_TYPES)
+    shell:
+        "cut -f 1 {input}| sort | uniq -c | sort -k1,1n > convertedNPDA.hist.genome_acc.tsv"
+        " && "
+        "cut -f 2 {input}| sort | uniq -c | sort -k1,1n > convertedNPDA.hist.contig_acc.tsv"
+        " && "
+        "cut -f 4 {input} | sort | uniq -c | sort -k1,1n > convertedNPDA.hist.element_symbol.tsv"
+        " && "
+        "awk 'BEGIN{{FS=OFS=\"\t\"}}{{print $4,$3}}' {input} | sort | uniq -c | sort -k1,1n > convertedNPDA.hist.element_symbol_name.tsv "
+        " && " 
+        "wc -l {output} " 
+
+
+#
+# threshold: remove elements that occur in < 5% of genomes
+#
+rule threshold_amr_elements_counts:
+    input: ELEMENT_CONTIG_TSV
+    output:
+        freq_tab="convertedNPDA.hist.element_symbol_uniq_genome_counts.tsv"
+    shell:
+        "scripts/threshold_element_symbol.py "
+        "   --input {input} "
+        "   --elem_genome_counts {output.freq_tab} "
+        "   --min_perc 90 "
+        "   --output /dev/null "
+
+rule threshold_amr_elements:
+    input: ELEMENT_CONTIG_TSV
+    output:
+        subset="convertedNPDA.{perc}perc.tsv"
+    shell:
+        "scripts/threshold_element_symbol.py "
+        "   --input {input} "
+        "   --elem_genome_counts /dev/null "
+        "   --min_perc {wildcards.perc} "
+        "   --output {output.subset} "
+
