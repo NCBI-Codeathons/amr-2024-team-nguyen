@@ -115,7 +115,9 @@ def processJSON(inputFilename, outputFilename):
       except Exception as e:
          print(f"The following error occurred: {e}")
 
-
+   outputFile = Path(outputFilename)
+   if not outputFile.exists():
+      outputFile.touch()
 
 # Trim a string that's possibly null and always return a non-null value.
 def safeTrim(text: str):
