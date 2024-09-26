@@ -23,6 +23,16 @@ This project will employ a 3-pronged approach to systematically identify AMR gen
 
 ## Tools
 
+### AMR Finder
+- [AMRFinderPlus](https://www.ncbi.nlm.nih.gov/pathogens/antimicrobial-resistance/AMRFinder/)
+
+### AMR Models
+- Private
+- [A genomic data resource for predicting antimicrobial resistance from laboratory-derived antimicrobial susceptibility phenotypes](https://academic.oup.com/bib/article/22/6/bbab313/6347947)
+
+### KMC
+- [Github](https://github.com/refresh-bio/KMC)
+
 ### Plasmid Prediction
 - [Classification of bacterial plasmid and chromosome derived sequences using machine learning](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0279280)
 #### PlasmidFinder
