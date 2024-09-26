@@ -20,8 +20,13 @@ rule all:
         hists=expand(ELEMENT_HIST_BASE+".{title}.tsv", title=ELEMENT_HIST_TYPES),
         uniq_genome_per_elem="convertedNPDA.hist.element_symbol_uniq_genome_counts.tsv",
         subset=expand("convertedNPDA.{perc}perc.tsv", perc=["5","10"]),
-        merge_contig_plasmid_elem=expand("contig_{asm}-plasmid-element_{perc}perc.tsv", asm=["denovo"], perc=["5"])
-        
+        merge_contig_plasmid_elem=expand("contig_{asm}-plasmid-element_{perc}perc.tsv", asm=["denovo"], perc=["5"]),
+        matrices=expand("genome_element_matrix.{asm}.{genome_perc}per_genomes.{pl_lo_perc}-{pl_hi_perc}per_pl.pl_assoc_all.tsv",
+                        asm=["denovo"],
+                        genome_perc=["0.5","1","5"],
+                        pl_lo_perc=["10"],
+                        pl_hi_perc=["90"])
+
 # ----------------------------------------------------------------------
 #
 # extract the elements we need form AMR map
@@ -82,6 +87,7 @@ rule threshold_amr_elements:
 
 
 rule merge_contigPlasmid_contigElements:
+    wildcard_constraints: asm="[a-z]+"
     input:
         contig_elements="convertedNPDA.{perc}perc.tsv",
         contig_plasmid="../merge_clean_zou_pred.{asm}.via_find_awk.tsv",
@@ -93,3 +99,22 @@ rule merge_contigPlasmid_contigElements:
         " --contig_elements {input.contig_elements} "
         " --contig_plasmid_calls {input.contig_plasmid} "
         " --out {output} "
+
+rule build_genome_elem_matrices:
+    wildcard_constraints: asm="[a-z]+"
+    input:
+        table="contig_{asm}-plasmid-element_{genome_perc}perc.tsv",
+        script="scripts/compute_plasmid_assoc_filtered_genome_element_matrices.py"
+    output:
+        all= "genome_element_matrix.{asm}.{genome_perc}per_genomes.{pl_lo_perc}-{pl_hi_perc}per_pl.pl_assoc_all.tsv",
+        high="genome_element_matrix.{asm}.{genome_perc}per_genomes.{pl_lo_perc}-{pl_hi_perc}per_pl.pl_assoc_high.tsv",
+        low= "genome_element_matrix.{asm}.{genome_perc}per_genomes.{pl_lo_perc}-{pl_hi_perc}per_pl.pl_assoc_low.tsv"
+        
+    shell:
+        "{input.script} "
+        " --contig_plasmidcall_elem_tab {input.table} "
+        " --low_pl_perc   {wildcards.pl_lo_perc} "
+        " --high_pl_perc {wildcards.pl_hi_perc} "
+        " --out_all_genome_elem {output.all} "
+        " --out_pl_high_matrix  {output.high} "
+        " --out_pl_low_matrix   {output.low} "
