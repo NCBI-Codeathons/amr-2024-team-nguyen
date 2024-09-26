@@ -21,6 +21,11 @@ This project will employ a 3-pronged approach to systematically identify AMR gen
 
 ![Data Pipeline](https://github.com/user-attachments/assets/a5da2130-1dba-43d6-bce2-2de54c97899c)
 
+## Tools
+
+# Plasmid Prediction
+- Classification of bacterial plasmid and chromosome derived sequences using machine learning [article](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0279280)
+
 ## Results
 
 TODO
