@@ -42,7 +42,25 @@ This project will employ a 3-pronged approach to systematically identify AMR gen
 
 ## Results
 
-TODO
+### AMR Phenotype Prediction Accuracies
+
+Full breakdown on species and individual antibiotics available in the AMR Phenotypes directory.  
+
+**Species-antibiotic summary**
+
+| |Ground Truth| |Expected| | |
+|-|------------|-|--------|-|-|
+|Species|F1 Score|Samples|F1 Score|95% CI||
+|acinetobacter baumannii|0.8975|920|0.9328|0.9321|0.9335|
+|campylobacter jejuni|0.9948|2138|0.9849|0.9847|0.9852|
+|clostridioides difficile|0.0000|1|0.9678|#DIV/0!|#DIV/0!|
+|enterococcus faecium|0.3406|14|0.9711|0.9707|0.9716|
+|klebsiella pneumoniae|0.8497|469|0.8960|0.8952|0.8969|
+|neisseria gonorrhoeae|0.5939|458|0.9640|0.9635|0.9645|
+|pseudomonas aeruginosa|0.8398|324|0.7894|0.7873|0.7914|
+|salmonella enterica|0.9230|7032|0.9319|0.9311|0.9327|
+|staphylococcus aureus|0.8324|456|0.9764|0.9761|0.9767|
+|streptococcus pneumoniae|0.9281|132|0.9629|0.9623|0.9634|
 
 ## Future Work
 
