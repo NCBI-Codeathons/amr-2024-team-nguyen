@@ -19,8 +19,9 @@ rule all:
      input:
         hists=expand(ELEMENT_HIST_BASE+".{title}.tsv", title=ELEMENT_HIST_TYPES),
         uniq_genome_per_elem="convertedNPDA.hist.element_symbol_uniq_genome_counts.tsv",
-        subset=expand("convertedNPDA.{perc}perc.tsv", perc=["5","10"])
-
+        subset=expand("convertedNPDA.{perc}perc.tsv", perc=["5","10"]),
+        merge_contig_plasmid_elem=expand("contig_{asm}-plasmid-element_{perc}perc.tsv", asm=["denovo"], perc=["5"])
+        
 # ----------------------------------------------------------------------
 #
 # extract the elements we need form AMR map
@@ -79,3 +80,16 @@ rule threshold_amr_elements:
         "   --min_perc {wildcards.perc} "
         "   --output {output.subset} "
 
+
+rule merge_contigPlasmid_contigElements:
+    input:
+        contig_elements="convertedNPDA.{perc}perc.tsv",
+        contig_plasmid="../merge_clean_zou_pred.{asm}.via_find_awk.tsv",
+        script="scripts/merge_contigPlasmidCalls_contigAMRElements.py"
+    output:
+        "contig_{asm}-plasmid-element_{perc}perc.tsv"
+    shell:
+        "{input.script} "
+        " --contig_elements {input.contig_elements} "
+        " --contig_plasmid_calls {input.contig_plasmid} "
+        " --out {output} "
