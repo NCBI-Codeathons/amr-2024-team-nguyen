@@ -37,7 +37,7 @@ This project will employ a 3-pronged approach to systematically identify AMR gen
 - [Classification of bacterial plasmid and chromosome derived sequences using machine learning](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0279280)
 #### PlasmidFinder
 - [Bioconda link](https://anaconda.org/bioconda/plasmidfinder)
-- [Websiste](https://cge.food.dtu.dk/services/PlasmidFinder/)
+- [Website](https://cge.food.dtu.dk/services/PlasmidFinder/)
 - [In Silico Detection and Typing of Plasmids using PlasmidFinder and Plasmid Multilocus Sequence Typing](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4068535/)
 
 ## Results
