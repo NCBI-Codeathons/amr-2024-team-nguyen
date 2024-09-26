@@ -2,8 +2,7 @@
 import argparse
 from enum import IntEnum
 import json
-import os
-import pandas as pd
+from pathlib import Path
 
 # Column indices
 class Column(IntEnum):
@@ -17,7 +16,6 @@ class Column(IntEnum):
    Accession_number = 7
 
 
-
 # Read a data.json file and write a new TSV.
 def processJSON(inputFilename, outputFilename):
 
@@ -25,47 +23,97 @@ def processJSON(inputFilename, outputFilename):
 
       try:
          strJSON = file.read()
-
+         if strJSON in (None, ""):
+            raise Exception(f"The {inputFilename} file is empty")
+         
+         # JSON
          JSON = json.loads(strJSON)
-
-         # TODO: Add validation to the intermediate JSON parsing steps below.
-
+         if JSON is None or not JSON or len(JSON) < 1:
+            raise Exception("Invalid JSON (empty)")
+      
+         # plasmidfinder
+         if "plasmidfinder" not in JSON:
+            raise KeyError("Invalid plasmidfinder key")
+         
          plasmidfinder = JSON["plasmidfinder"]
+         if plasmidfinder is None or not plasmidfinder or len(plasmidfinder) < 1:
+            raise Exception("Invalid plasmidfinder object")
+
+         # user_input
+         if "user_input" not in plasmidfinder:
+            raise KeyError("Invalid user_input key")
+         
+         userInput = plasmidfinder["user_input"]
+         if userInput is None or not userInput or len(userInput) < 1:
+            raise Exception("Invalid user_input object")
+
+         # filename(s)
+         if "filename(s)" not in userInput:
+            raise KeyError("No filenames are available")
+         
+         filenames = userInput["filename(s)"]
+         if filenames is None or not filenames or len(filenames) < 1:
+            raise Exception("No filenames were found")
 
          # plasmidfinder.user_input.filename(s)[0]
-         fileAndPath = plasmidfinder["user_input"]["filename(s)"][0]
+         fileAndPath = filenames[0]
+         if fileAndPath in (None, ""):
+            raise Exception("Invalid file and path value")
          
-         # Example filename: GCA_904866355.1_KSB1_6F_genomic.denovo.fna
-         filenameOnly = os.path.basename(fileAndPath)
-
-         # The genome accession is everything in the filename prior to the 2nd underscore.
-         tokens = filenameOnly.split("_")
-         genomeAccession = f"{tokens[0]}_{tokens[1]}"
+         # The genome accession is the directory immediately above the FASTA file.
+         directories = Path(fileAndPath).parts
+         genomeAccession = directories[len(directories)-2]
 
          with open(outputFilename, "w") as outputFile:
 
+            # Results
+            if "results" not in plasmidfinder:
+               raise KeyError("Invalid results key")
+            
             results = plasmidfinder["results"]
-            for resultKey in results:
+            if results is None or not results or len(results) < 1:
+               raise Exception("Invalid results object")
 
+            # Iterate over all results
+            for resultKey in results:
+               
                if resultKey == "Gram Positive" or resultKey == "Gram negative":
                   continue
-
+           
+               # Get and validate databases.
                databases = results[resultKey]
+               if databases is None or not databases or len(databases) < 1:
+                  continue
 
+               # Iterate over all database keys.
                for dbKey in databases:
+
+                  # Get and validate the database.
                   database = databases[dbKey]
+                  if database is None or not database or len(database) < 1:
+                     continue
                   
+                  if isinstance(database, str):
+                     print(f"No hits found for {dbKey}")
+                     continue
+
                   for contigKey in database:
 
                      data = database[contigKey]
-                     contig = data["contig_name"]
-                     identity = data["identity"]
+                     if data is None or not data or len(data) < 1:
+                        continue
 
+                     contig = data["contig_name"]
+                     if contig in (None, ""):
+                        continue
+
+                     identity = data["identity"]
+                     
                      # Write a row of TSV to the output file.
                      writeOutputTSV(outputFile, contig, genomeAccession, identity)
 
-      except Exception:
-         print(f"The following error occurred: {Exception}")
+      except Exception as e:
+         print(f"The following error occurred: {e}")
 
 
 
