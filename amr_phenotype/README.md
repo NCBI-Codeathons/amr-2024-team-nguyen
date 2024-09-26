@@ -1,5 +1,7 @@
 # AMR Model Phenotype Prediction Accuracies
 
+Accuracies computed using the getF1.py script.  Some work in Excel to compute confidence intervals for species overall.  
+
 **Species-antibiotic summary**
 
 | |Ground Truth| |Expected| | |
