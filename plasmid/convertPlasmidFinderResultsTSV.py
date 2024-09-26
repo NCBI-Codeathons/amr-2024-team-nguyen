@@ -16,18 +16,6 @@ class Column(IntEnum):
    Accession_number = 7
 
 
-def isValidDict(d, name):
-    if d is None:
-        print("The dictionary is None (invalid).")
-        return False
-    if not isinstance(d, dict):
-        print("The object is not a dictionary (invalid).")
-        return False
-    if not d:
-        print("The dictionary is empty.")
-        return False
-    return True
-
 # Read a data.json file and write a new TSV.
 def processJSON(inputFilename, outputFilename):
 
