@@ -238,8 +238,8 @@ rule plasmid_x_summarize_all_samples_fast:
 
 rule plasmids_pf:
     input:
-        expand(OUT_DIR + "/{accession}/{accession}.{asm}.fna.pf/data.json", accession=samplesDf['accession'], asm=['denovo','guided'])
-        #expand(OUT_DIR + "/{accession}/{accession}.{asm}.fna.pf/data.json.tsv", accession=samplesDf['accession'], asm=['denovo','guided'])
+        expand(OUT_DIR + "/{accession}/{accession}.{asm}.fna.pf/data.json", accession=samplesDf['accession'], asm=['denovo','guided']),
+        expand(OUT_DIR + "/{accession}/{accession}.{asm}.fna.pf/data.json.tsv", accession=samplesDf['accession'], asm=['denovo','guided'])
 
 rule plasmid_pf_analyze:
     input:
@@ -270,18 +270,15 @@ rule plasmid_pf_analyze:
 
 rule plasmid_pf_tsv_from_json:
     input:
-        denovo=OUT_DIR+"/{ACC}/{ACC}.denovo.fna.pf/data.json",
-        guided=OUT_DIR+"/{ACC}/{ACC}.guided.fna.pf/data.json",
+        json=OUT_DIR+"/{ACC}/{ACC}.{asm}.fna.pf/data.json",
         script="convertPlasmidFinderResultsTSV.py"
     output:
-        denovo=OUT_DIR+"/{ACC}/{ACC}.denovo.fna.pf/data.json.tsv",
-        guided=OUT_DIR+"/{ACC}/{ACC}.guided.fna.pf/data.json.tsv"
+        tsv=OUT_DIR+"/{ACC}/{ACC}.{asm}.fna.pf/data.json.tsv"
     shell:
         # denovo
-        "python3 {input.script} --in {input.denovo} --out {output.denovo}"
-        " && "
-        "python3 {input.script} --in {input.guided} --out {output.guided}"
-# ----------------------------------------------------------------------
+        "python3 {input.script} --in {input.json} --out {output.tsv}"
+
+        # ----------------------------------------------------------------------
 # 
 # All plasmid finders
 #
