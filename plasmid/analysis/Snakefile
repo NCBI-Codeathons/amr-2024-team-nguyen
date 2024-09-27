@@ -23,7 +23,7 @@ rule all:
         merge_contig_plasmid_elem=expand("contig_{asm}-plasmid-element_{perc}perc.tsv", asm=["denovo"], perc=["5"]),
         matrices=expand("genome_element_matrix.{asm}.{genome_perc}per_genomes.{pl_lo_perc}-{pl_hi_perc}per_pl.pl_assoc_all.tsv",
                         asm=["denovo"],
-                        genome_perc=["0.5","1","5"],
+                        genome_perc=["0.5","1","5","10"],
                         pl_lo_perc=["10"],
                         pl_hi_perc=["90"])
 
@@ -106,6 +106,7 @@ rule build_genome_elem_matrices:
         table="contig_{asm}-plasmid-element_{genome_perc}perc.tsv",
         script="scripts/compute_plasmid_assoc_filtered_genome_element_matrices.py"
     output:
+        stats= "element_stats.{asm}.{genome_perc}per_genomes.{pl_lo_perc}-{pl_hi_perc}per_pl.tsv",
         all= "genome_element_matrix.{asm}.{genome_perc}per_genomes.{pl_lo_perc}-{pl_hi_perc}per_pl.pl_assoc_all.tsv",
         high="genome_element_matrix.{asm}.{genome_perc}per_genomes.{pl_lo_perc}-{pl_hi_perc}per_pl.pl_assoc_high.tsv",
         low= "genome_element_matrix.{asm}.{genome_perc}per_genomes.{pl_lo_perc}-{pl_hi_perc}per_pl.pl_assoc_low.tsv"
@@ -113,8 +114,9 @@ rule build_genome_elem_matrices:
     shell:
         "{input.script} "
         " --contig_plasmidcall_elem_tab {input.table} "
-        " --low_pl_perc   {wildcards.pl_lo_perc} "
-        " --high_pl_perc {wildcards.pl_hi_perc} "
-        " --out_all_genome_elem {output.all} "
-        " --out_pl_high_matrix  {output.high} "
-        " --out_pl_low_matrix   {output.low} "
+        " --low_pl_perc      {wildcards.pl_lo_perc} "
+        " --high_pl_perc     {wildcards.pl_hi_perc} "
+        " --out_elem_stats      {output.stats} "
+        " --out_all_pl_matrix   {output.all} "
+        " --out_high_pl_matrix  {output.high} "
+        " --out_low_pl_matrix   {output.low} "
