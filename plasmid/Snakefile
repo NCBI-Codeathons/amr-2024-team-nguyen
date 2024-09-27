@@ -14,13 +14,13 @@ import os
 #
 # ---------------- INPUTs ----------------
 #
-DATASET_DIR="/home/nbowers/bvbrc-dev/dev_container/NCBI_AMR_Codeathon/all-ast"
+DATASET_DIR="/path/to/all-ast"
 CAT_FILENAME="dataset_catalog.json"
-TEST_CAT_FILENAME="/home/ac.curtish/NCBI_AMR_Codeathon/my-ast/dataset_catalog.head.json"
+TEST_CAT_FILENAME="/path/to/my-ast/dataset_catalog.head.json"
 #
 # ---------------- OUTPUTS ----------------
 #
-#OUT_DIR="/home/ac.curtish/NCBI_AMR_Codeathon/all-plasmid/out"
+#OUT_DIR="/path/to/all-plasmid/out"
 OUT_DIR="out"
  
 #
