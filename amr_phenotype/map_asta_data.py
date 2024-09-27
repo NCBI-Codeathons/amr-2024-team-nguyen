@@ -2,7 +2,7 @@ import pandas as pd
 ### Now let's  map to the pathogen data from MicroBiggie ###
 contig_df = pd.read_csv("zou_plasmid_results.tsv", sep="\t")
 
-mb_df = pd.read_csv("/home/nbowers/bvbrc-dev/dev_container/NCBI_AMR_Codeathon/ncbi_pathogen_detect_amr.csv", low_memory=False)
+mb_df = pd.read_csv("/path/to/ncbi_pathogen_detect_amr.csv", low_memory=False)
 
 mb_df.rename(
             columns={

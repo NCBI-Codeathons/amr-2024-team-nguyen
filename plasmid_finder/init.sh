@@ -30,7 +30,7 @@ echo <<EOF
 #
 EOF
 echo  plasmidfinder.py \
-      -i /home/nbowers/bvbrc-dev/dev_container/NCBI_AMR_Codeathon/all-ast/GCA_904866355.1/GCA_904866355.1_KSB1_6F_genomic.denovo.fna \
+      -i /path/to/all-ast/GCA_904866355.1/GCA_904866355.1_KSB1_6F_genomic.denovo.fna \
       -o ./output
 echo "# view output"
 echo "cat output/data.json | jq "
