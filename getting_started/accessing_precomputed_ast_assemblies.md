@@ -10,7 +10,7 @@ gcloud auth login
 
 ## Copying the files
 ```
-gsutil -m cp -r gs://ast-assemblies/all-ast/ /output/ath
+gsutil -m cp -r gs://ast-assemblies/all-ast/ /output/path
 ```
  The `-m` flag enables multithreading.
  The `-r` flag allows for recursive file copying. This allows the `cp` command to copy the top level directory as well as any subdirectories and preserve the directory structure.
