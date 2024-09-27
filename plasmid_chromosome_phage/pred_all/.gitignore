@@ -1,2 +1,12 @@
+# non-public things
 aytan 
 aytan_plasHost
+# things created by init.sh
+._init.sh
+Anaconda3-4.4.0-Linux-x86_64.sh
+kmc/KMC3.2.2.linux.x64.tar.gz
+kmc/bin/
+kmc/include/
+zou/conda3/
+zou/conda3_nogpu/
+zou/zou-plasmid-prediction/

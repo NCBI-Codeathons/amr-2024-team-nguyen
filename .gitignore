@@ -1,5 +1,13 @@
 # editor file
 *~
 \#*
+*.bak
 # python 
 __pycache__
+# bulk data for Codeathon
+all-ast/
+# tar files
+*.tar
+*.tar.gz
+# conda built envs
+conda

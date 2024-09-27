@@ -203,10 +203,10 @@ rule plasmid_x_summarize_sample:
         denovo=OUT_DIR+"/{ACC}/{ACC}.zou.pred.clean.denovo.tsv"
     shell:
         # denovo only
-        "{input.script} -in_dir $(dirname {output.denovo}) -denovo_pat '*.denovo.fna.zou.pred.tab' -guided_pat '*.NONE.fna.zou.pred.tab' -out_tsv {output.denovo}"
+        "{input.script} -in_dir $(dirname {output.denovo}) -denovo_pat '*.denovo.fna.zou.pred.tab' -guided_pat '*.NONE.fna.zou.pred.tab' -out {output.denovo}"
         " && "
         # all: denovo & guided
-        "{input.script} -in_dir $(dirname {output.denovo}) -denovo_pat '*.denovo.fna.zou.pred.tab' -guided_pat '*.guided.fna.zou.pred.tab' -out_tsv {output.all}"
+        "{input.script} -in_dir $(dirname {output.denovo}) -denovo_pat '*.denovo.fna.zou.pred.tab' -guided_pat '*.guided.fna.zou.pred.tab' -out {output.all}"
     
 #
 # a simple awk script turned out to be orders of magnitude faster
@@ -237,7 +237,9 @@ rule plasmid_x_summarize_all_samples_fast:
 # ----------------------------------------------------------------------
 
 rule plasmids_pf:
-    input: expand(OUT_DIR + "/{accession}/{accession}.{asm}.fna.pf/results_tab.tsv", accession=samplesDf['accession'], asm=['denovo','guided'])
+    input:
+        expand(OUT_DIR + "/{accession}/{accession}.{asm}.fna.pf/data.json", accession=samplesDf['accession'], asm=['denovo','guided']),
+        expand(OUT_DIR + "/{accession}/{accession}.{asm}.fna.pf/data.json.tsv", accession=samplesDf['accession'], asm=['denovo','guided'])
 
 rule plasmid_pf_analyze:
     input:
@@ -245,7 +247,9 @@ rule plasmid_pf_analyze:
         guided_fa=OUT_DIR+"/{ACC}/{ACC}.guided.fna",
     output:
         denovo=OUT_DIR+"/{ACC}/{ACC}.denovo.fna.pf/results_tab.tsv",
-        guided=OUT_DIR+"/{ACC}/{ACC}.guided.fna.pf/results_tab.tsv"
+        denovo_json=OUT_DIR+"/{ACC}/{ACC}.denovo.fna.pf/data.json",
+        guided=OUT_DIR+"/{ACC}/{ACC}.guided.fna.pf/results_tab.tsv",
+        guided_json=OUT_DIR+"/{ACC}/{ACC}.guided.fna.pf/data.json"
     shell:
         # activate env
         "("
@@ -256,15 +260,25 @@ rule plasmid_pf_analyze:
         # denovo
         #"./scripts/plasmid_pf.sh ../plasmid_finder {input.denovo_fa} $(dirname {output.denovo}) "
         #"plasmidfinder.py -i {input.denovo_fa} -o $(dirname {output.denovo}) "
-        "if [ -s {input.denovo_fa} ]; then plasmidfinder.py -x -i {input.denovo_fa} -o $(dirname {output.denovo}); else touch {output.denovo}; fi "
+        "if [ -s {input.denovo_fa} ]; then plasmidfinder.py -x -i {input.denovo_fa} -o $(dirname {output.denovo}); else touch {output.denovo} {output.denovo_json}; fi "
         " && "
         # guided
         #"./scripts/plasmid_pf.sh ../plasmid_finder {input.guided_fa} $(dirname {output.guided}) "
         #"plasmidfinder.py -i {input.guided_fa} -o $(dirname {output.guided}) "
-        "if [ -s {input.guided_fa} ]; then plasmidfinder.py -x -i {input.guided_fa} -o $(dirname {output.guided}); else  touch {output.guided}; fi "
+        "if [ -s {input.guided_fa} ]; then plasmidfinder.py -x -i {input.guided_fa} -o $(dirname {output.guided}); else  touch {output.guided} {output.guided_json}; fi "
         ")"
 
-# ----------------------------------------------------------------------
+rule plasmid_pf_tsv_from_json:
+    input:
+        json=OUT_DIR+"/{ACC}/{ACC}.{asm}.fna.pf/data.json",
+        script="convertPlasmidFinderResultsTSV.py"
+    output:
+        tsv=OUT_DIR+"/{ACC}/{ACC}.{asm}.fna.pf/data.json.tsv"
+    shell:
+        # denovo
+        "python3 {input.script} --in {input.json} --out {output.tsv}"
+
+        # ----------------------------------------------------------------------
 # 
 # All plasmid finders
 #
@@ -273,5 +287,5 @@ rule plasmid_pf_analyze:
 rule plasmids:
     input:
         xioahui_finder=rules.plasmids_x.input,
-        plasmidfinder=rules.plasmids_pf.input
+        plasmid_finder=rules.plasmids_pf.input
      
