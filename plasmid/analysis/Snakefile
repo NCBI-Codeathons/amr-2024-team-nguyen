@@ -24,8 +24,9 @@ rule all:
         matrices=expand("genome_element_matrix.{asm}.{genome_perc}per_genomes.{pl_lo_perc}-{pl_hi_perc}per_pl.pl_assoc_all.tsv",
                         asm=["denovo"],
                         genome_perc=["0.5","1","5","10"],
-                        pl_lo_perc=["10"],
-                        pl_hi_perc=["90"])
+                        pl_lo_perc=["20"],pl_hi_perc=["80"]
+#                        pl_lo_perc=["10"],pl_hi_perc=["90"]
+                        )
 
 # ----------------------------------------------------------------------
 #
