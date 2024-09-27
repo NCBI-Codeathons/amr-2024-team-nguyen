@@ -62,6 +62,35 @@ Full breakdown on species and individual antibiotics available in the AMR Phenot
 |staphylococcus aureus|0.8324|456|0.9764|0.9761|0.9767|
 |streptococcus pneumoniae|0.9281|132|0.9629|0.9623|0.9634|
 
+**AMR Gene Correlations to Phenotype Data**
+
+Average and 95% confidence intervals for genes in different gene sets correlated to all antibiotics' phenotypes.  
+- ALL: All AMR Genes
+- Plasmid: AMR genes that are likely to be on plasmids.  Gene appears on a plasmid >X% of the time (X=10, 20)
+- Chromosome: AMR genes that are likely to be on chromosomes.  Gene appears on a chromosome >X% of the time (X=10,20)
+- NDARO: Public NDARO AMR Phenotypes
+- Augmented: NDARO AMR phenotypes + augmented AMR phenotype predictions from ML model.  
+
+|10% Threshold| | | | |
+|-------------|-|-|-|-|
+|Gene Correlation|Dataset|Avg AST Corr|95% CI||
+|ALL|Augmented|0.0115|0.0006|0.0224|
+|ALL|NDARO|0.0179|0.0059|0.0299|
+|Plasmid|Augmented|0.0663|0.0476|0.0850|
+|Plasmid|NDARO|0.0668|0.0464|0.0872|
+|Chromosome|Augmented|-0.0310|-0.0483|-0.0136|
+|Chromosome|NDARO|-0.0217|-0.0409|-0.0024|
+
+|20% Threshold| | | | |
+|-------------|-|-|-|-|
+|Gene Correlation|Dataset|Avg AST Corr|95% CI||
+|ALL|Augmented|0.011484778|0.000600566|0.02236899|
+|ALL|NDARO|0.017907133|0.005891491|0.029922775|
+|Plasmid|Augmented|0.066931452|0.052262277|0.081600626|
+|Plasmid|NDARO|0.073473773|0.057341983|0.089605563|
+|Chromosome|Augmented|-0.030951402|-0.048302525|-0.01360028|
+|Chromosome|NDARO|-0.021679668|-0.040932581|-0.002426754|
+
 ## Future Work
 
 TODO
