@@ -97,6 +97,9 @@ Arbitrary thresholds set
 - Plasmid thresholds for correlation analysis still needs to be fleshed out?
 - Filtered out AMR genes that occured in less than 5% of genomes.
 
+Denovo vs guided assemblies
+- We only did predictions on denovo assemblies, we need to figure out how to de-duplicate the guided and denovo if we combine them.
+
 Filtering AMR Genes
 - Removed low occurence genes: should we have rolled them into the "super family".  In other words, if BLA-8 was low occurence, should it's count be added towards BLA?
 - Filtering out gene-antibiotic relations that have relation, this would strengthen the correlations, though probably not the final result of plasmid > all > chromosome
