@@ -19,7 +19,7 @@ BEGIN {
     second_level_dir = arr[1]
 
     # Strip the "_split_seq_[0-9]+" suffix from the first column
-    gsub(/_split_seq_[0-9]+$/, "", $1)
+    gsub(/_split_seq_[0-9.sub]+$/, "", $1)
 
     # Print the second-level directory as the new first column, followed by the rest of the line
     print second_level_dir, $CONTIG_ACC, ASM_TYPE, $CALL, $SCORE
