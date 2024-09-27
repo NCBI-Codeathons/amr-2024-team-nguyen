@@ -20,6 +20,6 @@ We selected all fields for the data with the type "AMR". We limited the data to 
 
 Our query results were too large for the GCP standard output options. So we created storage buckets with the help of NCBI staff member, Brian Koser.
 
-Data Availability Disclaimer 
+**Data Availability Disclaimer** 
 You may need to contact the NCBI codeathon hosts for access. It is also possible these data will not be avaialbe on GCP afer the codeathon completes.
 
