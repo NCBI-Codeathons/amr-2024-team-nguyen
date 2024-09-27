@@ -93,7 +93,22 @@ Average and 95% confidence intervals for genes in different gene sets correlated
 
 ## Future Work
 
-TODO
+Arbitrary thresholds set
+- Plasmid thresholds for correlation analysis still needs to be fleshed out?
+- Filtered out AMR genes that occured in less than 5% of genomes.
+
+Filtering AMR Genes
+- Removed low occurence genes: should we have rolled them into the "super family".  In other words, if BLA-8 was low occurence, should it's count be added towards BLA?
+- Filtering out gene-antibiotic relations that have relation, this would strengthen the correlations, though probably not the final result of plasmid > all > chromosome
+
+Plasmid prediction
+- Run anslysis on PlasmidFinder
+- Look into failed plasmid prediction runs
+
+AMR phenotypes
+- Stuck to mainly susceptible and resistant, correlation to MICs might offer a better depth of correlation.
+- Keep the augmented set? For augmented dataset we do need to check if any of the NDARO data was used in training.  We also want to remove the non-representative species (like C. diff and Neisseria) if we go this route.
+- We augmented only on denovo assemblies and ignored guided.  We would need to figure out a way to do guided.  
 
 ## NCBI Codeathon Disclaimer
 This software was created as part of an NCBI codeathon, a hackathon-style event focused on rapid innovation. While we encourage you to explore and adapt this code, please be aware that NCBI does not provide ongoing support for it.
