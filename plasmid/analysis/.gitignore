@@ -1,0 +1,7 @@
+# files > 100M limit
+convertedNPDA.hist.contig_acc.tsv
+convertedNPDA.hist.element_symbol_name.tsv
+convertedNPDA.*perc.tsv
+
+# all .tsv are suspicious?
+#*.tsv

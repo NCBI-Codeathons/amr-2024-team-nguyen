@@ -28,13 +28,13 @@ plot <- ggplot(data, aes(x = V5, y = V7, color = V4, genome=V1, contig=V2)) +
         plot.title = element_text(size = 20, face = "bold"))  # Increase font size for plot title
  
 
-ggsave("merge_clean_join_zou_pf_pred.denovo.both.png", plot = plot, width = 8, height = 6, dpi = 300)
+ggsave("figures/merge_clean_join_zou_pf_pred.denovo.both.png", plot = plot, width = 8, height = 6, dpi = 300)
 
 # convert to interactive
 interactive_plot <- ggplotly(plot)
 
 # Save the interactive plot as an HTML file
-htmlwidgets::saveWidget(interactive_plot, "merge_clean_join_zou_pf_pred.denovo.both.html")
+htmlwidgets::saveWidget(interactive_plot, "figures/merge_clean_join_zou_pf_pred.denovo.both.html")
 
 # ----------------------------------------------------------------------
 # ALL CONTIGS called (outer left join)
@@ -59,10 +59,10 @@ plot <- ggplot(data, aes(x = V5, y = V7, color = V4, genome=V1, contig=V2)) +
         plot.title = element_text(size = 20, face = "bold"))  # Increase font size for plot title
  
 
-ggsave("merge_clean_join_zou_pf_pred.denovo.all.png", plot = plot, width = 8, height = 6, dpi = 300)
+ggsave("figures/merge_clean_join_zou_pf_pred.denovo.all.png", plot = plot, width = 8, height = 6, dpi = 300)
 
 # convert to interactive
 interactive_plot <- ggplotly(plot)
 
 # Save the interactive plot as an HTML file
-htmlwidgets::saveWidget(interactive_plot, "merge_clean_join_zou_pf_pred.denovo.all.html")
+htmlwidgets::saveWidget(interactive_plot, "figures/merge_clean_join_zou_pf_pred.denovo.all.html")
